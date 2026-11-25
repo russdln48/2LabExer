@@ -1,0 +1,202 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MarvelMoviesApp());
+}
+
+class MarvelMovie {
+  final String title;
+  final int year;
+  final String director;
+  final String description;
+
+  const MarvelMovie({
+    required this.title,
+    required this.year,
+    required this.director,
+    required this.description,
+  });
+}
+
+class MarvelMoviesApp extends StatelessWidget {
+  const MarvelMoviesApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Marvel Movies',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.red.shade800),
+        useMaterial3: true,
+      ),
+      home: const MarvelMoviesPage(title: 'Marvel Movies'),
+    );
+  }
+}
+
+class MarvelMoviesPage extends StatelessWidget {
+  const MarvelMoviesPage({super.key, required this.title});
+
+  final String title;
+
+  static const List<MarvelMovie> _movies = [
+    MarvelMovie(
+      title: 'Iron Man',
+      year: 2008,
+      director: 'Jon Favreau',
+      description:
+          'After being held captive in an Afghan cave, billionaire engineer Tony Stark creates a unique weaponized suit of armor to fight evil.',
+    ),
+    MarvelMovie(
+      title: 'The Avengers',
+      year: 2012,
+      director: 'Joss Whedon',
+      description:
+          'Earth\'s mightiest heroes must come together and learn to fight as a team to stop the mischievous Loki and his alien army from enslaving humanity.',
+    ),
+    MarvelMovie(
+      title: 'Guardians of the Galaxy',
+      year: 2014,
+      director: 'James Gunn',
+      description:
+          'A group of intergalactic criminals must pull together to stop a fanatical warrior with plans to purge the universe.',
+    ),
+    MarvelMovie(
+      title: 'Captain America: Civil War',
+      year: 2016,
+      director: 'Anthony & Joe Russo',
+      description:
+          'Political involvement in the Avengers\' affairs causes a rift between Captain America and Iron Man, dividing the team into two opposing factions.',
+    ),
+    MarvelMovie(
+      title: 'Black Panther',
+      year: 2018,
+      director: 'Ryan Coogler',
+      description:
+          'T\'Challa, heir to the hidden but advanced kingdom of Wakanda, must step forward to lead his people into a new future and confront a challenger from his country\'s past.',
+    ),
+    MarvelMovie(
+      title: 'Avengers: Infinity War',
+      year: 2018,
+      director: 'Anthony & Joe Russo',
+      description:
+          'The Avengers and their allies must be willing to sacrifice all in an attempt to defeat the powerful Thanos before his blitz of devastation puts an end to the universe.',
+    ),
+    MarvelMovie(
+      title: 'Avengers: Endgame',
+      year: 2019,
+      director: 'Anthony & Joe Russo',
+      description:
+          'After the devastating events of Infinity War, the remaining Avengers assemble once more in order to reverse Thanos\' actions and restore balance to the universe.',
+    ),
+    MarvelMovie(
+      title: 'Spider-Man: No Way Home',
+      year: 2021,
+      director: 'Jon Watts',
+      description:
+          'With Spider-Man\'s identity now revealed, Peter asks Doctor Strange for help. When a spell goes wrong, dangerous foes from other worlds start to appear.',
+    ),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(title),
+      ),
+      body: ListView.builder(
+        padding: const EdgeInsets.all(12),
+        itemCount: _movies.length,
+        itemBuilder: (context, index) {
+          final movie = _movies[index];
+          return Card(
+            margin: const EdgeInsets.only(bottom: 10),
+            clipBehavior: Clip.antiAlias,
+            child: ListTile(
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 8,
+              ),
+              leading: CircleAvatar(
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                child: const Icon(Icons.movie),
+              ),
+              title: Text(
+                movie.title,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              subtitle: Text(
+                '${movie.year} • ${movie.description}',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MovieDetailPage(movie: movie),
+                  ),
+                );
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class MovieDetailPage extends StatelessWidget {
+  const MovieDetailPage({super.key, required this.movie});
+
+  final MarvelMovie movie;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(movie.title),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              movie.title,
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Released: ${movie.year}  |  Director: ${movie.director}',
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+            ),
+            const Divider(height: 32),
+            Text(
+              'Description',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              movie.description,
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    height: 1.5,
+                  ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
